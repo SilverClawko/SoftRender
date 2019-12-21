@@ -11,6 +11,7 @@
 ![text](https://github.com/SilverClawko/SoftRender/blob/master/ss1.png)
 ![text](https://github.com/SilverClawko/SoftRender/blob/master/ss2.png)
 ![text](https://github.com/SilverClawko/SoftRender/blob/master/ss3.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/master/ss4.png)
 
 文件说明：
 Globel.h 全局变量，MVP矩阵存放
