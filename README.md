@@ -1,6 +1,9 @@
 # SoftRender
+
 一个简单的软件渲染器，渲染生成颜色缓冲数组之后使用glDrawPixels绘制到屏幕上
+
 运行环境： GLAD + GLFW + GLM
+
 配置环境：https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/
 
 文件说明：
