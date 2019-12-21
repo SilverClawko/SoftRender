@@ -29,6 +29,8 @@ Shader.h 基础着色器
 
 BlinnPhongShader.h 标准光照着色器
 
+Light.h 定向光，点光源，聚光灯三种光照的数据结构与光照计算
+
 Clip.h 用于计算多边形的视口裁剪
 
 Camera.h FPS摄像机
