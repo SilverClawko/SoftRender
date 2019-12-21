@@ -8,9 +8,9 @@
 
 配置环境：https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/
 
-!https://github.com/SilverClawko/SoftRender/blob/master/ss1.png
-!https://github.com/SilverClawko/SoftRender/blob/master/ss2.png
-!https://github.com/SilverClawko/SoftRender/blob/master/ss3.png
+![text](https://github.com/SilverClawko/SoftRender/blob/master/ss1.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/master/ss2.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/master/ss3.png)
 
 文件说明：
 Globel.h 全局变量，MVP矩阵存放
