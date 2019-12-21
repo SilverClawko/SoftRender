@@ -2,9 +2,15 @@
 
 一个简单的软件渲染器，渲染生成颜色缓冲数组之后使用glDrawPixels绘制到屏幕上
 
+实现功能：obj模型加载与渲染，纹理加载与渲染，Blinn-Phong光照模型，点光源/平行光/聚光灯的光照计算
+
 运行环境： GLAD + GLFW + GLM
 
 配置环境：https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/
+
+!https://github.com/SilverClawko/SoftRender/blob/master/ss1.png
+!https://github.com/SilverClawko/SoftRender/blob/master/ss2.png
+!https://github.com/SilverClawko/SoftRender/blob/master/ss3.png
 
 文件说明：
 Globel.h 全局变量，MVP矩阵存放
