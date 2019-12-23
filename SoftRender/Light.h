@@ -16,10 +16,10 @@ public:
 	virtual ~Light() {
 	}
 	Light(
-		const glm::vec3 &pos = glm::vec3(0,0,0),
-		const glm::vec3 &color = glm::vec3(1,1,1),
-		const glm::vec3 &specular = glm::vec3(1,1,1),
-		const glm::vec3 &dir = glm::vec3(0,-1,0),
+		const glm::vec3 &pos = glm::vec3(0, 0, 0),
+		const glm::vec3 &color = glm::vec3(1, 1, 1),
+		const glm::vec3 &specular = glm::vec3(1, 1, 1),
+		const glm::vec3 &dir = glm::vec3(0, -1, 0),
 		const float & i = 1.0f) :
 		Position(pos),
 		Color(color),
@@ -52,8 +52,9 @@ public:
 		const glm::vec3 &albedo
 	) {
 		float diff = max(glm::dot(worldNormal, -Direction), 0);
-		glm::vec3 reflectDir = glm::normalize(reflect(Direction, worldNormal));
-		float spec = pow(max(glm::dot(worldViewDir, reflectDir), 0), currentMat->Gloss);
+
+		glm::vec3 halfDir = glm::normalize(worldViewDir - Direction);
+		float spec = pow(max(glm::dot(halfDir, worldNormal), 0), currentMat->Gloss);
 
 		glm::vec3 diffuse = Color * diff * albedo;
 		glm::vec3 specular = Specular * spec;
@@ -69,19 +70,19 @@ public:
 	float Quadratic;
 
 	PointLight(
-		const glm::vec3 &pos = glm::vec3(0,0,0),
+		const glm::vec3 &pos = glm::vec3(0, 0, 0),
 		const glm::vec3 &color = glm::vec3(1, 1, 1),
 		const glm::vec3 &specular = glm::vec3(1, 1, 1),
 		const float & i = 1.0f,
 		const float & c = 1.0f,
 		const float & l = 0.09f,
 		const float & q = 0.032f
-		): Constant(c),Linear(l),Quadratic(q)
+	) : Constant(c), Linear(l), Quadratic(q)
 	{
 		Position = pos;
 		Color = color;
 		Specular = specular;
-		Direction = glm::vec3(0,0,0);
+		Direction = glm::vec3(0, 0, 0);
 		Intensity = i;
 	}
 
@@ -98,8 +99,9 @@ public:
 
 		glm::vec3 lightDir = glm::normalize(worldPos - Position);
 		float diff = max(glm::dot(worldNormal, -lightDir), 0);
-		glm::vec3 reflectDir = glm::normalize(reflect(lightDir, worldNormal));
-		float spec = pow(max(glm::dot(worldViewDir, reflectDir), 0), currentMat->Gloss);
+
+		glm::vec3 halfDir = glm::normalize(worldViewDir - lightDir);
+		float spec = pow(max(glm::dot(halfDir, worldNormal), 0), currentMat->Gloss);
 
 		glm::vec3 diffuse = Color * diff * albedo;
 		glm::vec3 specular = Specular * spec;
@@ -130,7 +132,7 @@ public:
 		const float & q = 0.032f,
 		const float & icut = glm::cos(glm::radians(12.5f)),
 		const float & ocut = glm::cos(glm::radians(17.5))
-	) : innerCutOff(icut),outterCutOff(ocut)
+	) : innerCutOff(icut), outterCutOff(ocut)
 	{
 		Position = pos;
 		Color = color;
@@ -151,15 +153,16 @@ public:
 
 		glm::vec3 lightDir = glm::normalize(worldPos - Position);
 		float theta = glm::dot(lightDir, glm::normalize(Direction));
-		float weight = saturate((theta - outterCutOff)/(innerCutOff-outterCutOff));
+		float weight = saturate((theta - outterCutOff) / (innerCutOff - outterCutOff));
 		float intensity = Lerp(0, 1, weight);
 
 		float distance = glm::distance(worldPos, Position);
 		float attenuation = 1.0 / (Constant + Linear * distance +
 			Quadratic * (distance * distance));
 		float diff = max(glm::dot(worldNormal, -lightDir), 0);
-		glm::vec3 reflectDir = glm::normalize(reflect(lightDir, worldNormal));
-		float spec = pow(max(glm::dot(worldViewDir, reflectDir), 0), currentMat->Gloss);
+
+		glm::vec3 halfDir = glm::normalize(worldViewDir - lightDir);
+		float spec = pow(max(glm::dot(halfDir, worldNormal), 0), currentMat->Gloss);
 
 		glm::vec3 diffuse = Color * diff * albedo;
 		glm::vec3 specular = Specular * spec;
