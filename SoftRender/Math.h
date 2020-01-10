@@ -73,6 +73,7 @@ glm::mat4 GetPerspectiveMatrix(const float & fovy, const float & aspect, const f
 	return result;
 }
 
+
 //用模型矩阵求解法线变换矩阵
 //用4X4模型矩阵左上角的3X3的逆转置矩阵
 //如果没有做不均匀缩放的话法线矩阵就是模型矩阵左上角

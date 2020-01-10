@@ -57,23 +57,22 @@ public:
 };
 
 	//存一个三角形
-	Mesh CreateTriangle(const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3) {
+	Mesh CreateTriangle(const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3,const glm::vec3 &normal) {
 		Mesh result(3,3);
 		//逆时针的三角形
 		//顶点顺序 0 1 2
-		//纹理坐标 (0,0) (1,0) (0.5,1)
 		result.VBO[0].position = glm::vec4(p1, 1.0f);
-		result.VBO[0].normal = glm::vec3(0.0f, 0.0f, 1.0f);
+		result.VBO[0].normal = normal;
 		result.VBO[0].color = glm::vec4(255,0,0,255);
-		result.VBO[0].texcoord = glm::vec2(0.0f, 0.0f);
+		result.VBO[0].texcoord = glm::vec2(0.0f, 1.0f);
 		result.VBO[1].position = glm::vec4(p2, 1.0f);
-		result.VBO[1].normal = glm::vec3(0.0f, 0.0f, 1.0f);
+		result.VBO[1].normal = normal;
 		result.VBO[1].color = glm::vec4(0,255,0,255);
-		result.VBO[1].texcoord = glm::vec2(1.0f, 0.0f);
+		result.VBO[1].texcoord = glm::vec2(0.0f, 0.0f);
 		result.VBO[2].position = glm::vec4(p3, 1.0f);
-		result.VBO[2].normal = glm::vec3(0.0f, 0.0f, 1.0f);
+		result.VBO[2].normal = normal;
 		result.VBO[2].color = glm::vec4(0,0,255,255);
-		result.VBO[2].texcoord = glm::vec2(0.5f, 1.0f);
+		result.VBO[2].texcoord = glm::vec2(1.0f, 0.0f);
 		result.EBO[0] = 0;
 		result.EBO[1] = 1;
 		result.EBO[2] = 2;

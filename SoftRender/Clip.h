@@ -53,7 +53,7 @@ V2F Intersect(const V2F &v1,const V2F &v2,const glm::vec3 &line) {
 //注意 顶点的时针顺序要跟裁剪边的遍历顺序一致
 std::vector<V2F> SutherlandHodgeman(const V2F &v1, const V2F &v2, const V2F &v3) {
 	std::vector<V2F> output = {v1,v2,v3};
-	if (AllVertexsInside(v1.windowPos / v1.Z, v2.windowPos / v2.Z , v3.windowPos / v3.Z)) {
+	if (AllVertexsInside(v1.windowPos , v2.windowPos , v3.windowPos)) {
 		return output;
 	}
 	for (int i = 0; i < 4; i++) {

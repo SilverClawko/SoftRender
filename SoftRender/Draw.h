@@ -2,12 +2,11 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-
 #include "FrameBuffer.h"
 #include "Model.h"
 #include "Camera.h"
 #include "Clip.h"
-#include "BlinnPhongShader.h"
+#include "PBR.h"
 
 
 enum RenderMode {
@@ -28,40 +27,35 @@ private:
 	int Height;
 	FrameBuffer *FrontBuffer;
 
+	FrameBuffer FBO1;
 	std::vector<glm::vec4> ViewPlanes;
 
 	bool faceCull;
 	Face cullMod;
 	RenderMode renderMod;
 
-
 public:
 
 	Draw(const int &w, const int &h) : 
 		Width(w),Height(h),
 		FrontBuffer(nullptr),
+		FBO1(FrameBuffer(w,h)),
 		faceCull(false),
 		cullMod(Back),
 		renderMod(Fill)
 	{
 		ViewPlanes.resize(6, glm::vec4(0));
+		FrontBuffer = &FBO1;
 	}
 	~Draw(){
-		if (FrontBuffer)
-			delete FrontBuffer;
 		FrontBuffer = nullptr;
-	}
-
-	void Init() {
-		if (FrontBuffer)
-			delete FrontBuffer;
-		FrontBuffer = new FrameBuffer(Width, Height);
 	}
 
 	void Resize(const int& w, const int &h) {
 		Width = w;
 		Height = h;
-		FrontBuffer->Resize(w, h);
+		FBO1.Resize(w, h);
+		//FrontBuffer->Resize(w, h);
 	}
 
 	void ClearBuffer(const glm::vec4 &color) {
@@ -321,7 +315,6 @@ public:
 			}
 		}
 	}
-
 	//bresenhamLine ª≠œﬂÀ„∑®
 	void DrawLine(const V2F &from, const V2F &to)
 	{

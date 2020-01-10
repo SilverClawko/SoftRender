@@ -93,7 +93,6 @@ int main() {
 		SCR_WIDTH, SCR_HEIGHT);
 
 	dw = new Draw(SCR_WIDTH, SCR_HEIGHT);
-	dw->Init();
 	dw->EnableCull(Back);
 
 
@@ -125,8 +124,6 @@ int main() {
 	eyeMat.SetTexture(&eyeTexture);
 
 
-
-
 	
 	Model model("neptune\\neptune.obj");
 	model.SetMaterial(0, mouseMat);
@@ -134,28 +131,34 @@ int main() {
 	model.SetMaterial(2, bodyMat);
 	model.SetMaterial(3, eyeMat);
 
+	PBRShader pbr;
+	Model wBox("box\\Wooden_stuff.obj");
+	Material wBoxMat;
+	wBoxMat.SetShader(&pbr);
+	Texture wBoxTexture("box\\Wooden_box_01_BaseColor.png");
+	wBoxMat.SetTexture(&wBoxTexture);
+	Texture wBoxNormal("box\\Wooden_box_01_Normal.png");
+	wBoxMat.SetNormalMap(&wBoxNormal);
+	Texture wBoxHeight("box\\Wooden_box_01_Height.png");
+	wBoxMat.SetHeightMap(&wBoxHeight);
+	wBox.SetMaterial(0, wBoxMat);
 
-	Mesh box = CreateBox(glm::vec3(2, 0.0, 0.0), 0.5);
+
+	Mesh box = CreateBox(glm::vec3(1, 0.0, -1), 0.5);
 	Material mat;
 	mat.SetShader(&shader);
 	Texture boxt("container.jpg");
 	mat.SetTexture(&boxt);
 	Object obj(box,mat);
 
-	//BlinnPhongShader lightShader;
-	//Material lightMat;
-	//lightMat.SetShader(&lightShader);
-	//Mesh lamp = CreateBox(glm::vec3(1,1,1),0.1);
-	//Object Lamp(lamp, lightMat);
-	//model.objects.push_back(obj);
-
 	DirectionLight dir(glm::vec3(-1,-1,-1));
-	shader.SetDirectionLight(&dir);
+	dirLights = &dir;
+	dirLtNums = 1;
 	//PointLight pt(glm::vec3(1,1,1));
 	//shader.SetPointLight(&pt);
 	SpotLight sp(camera->Position,camera->Front);
-	shader.SetSpotLight(&sp);
-
+	spLights = &sp;
+	spLtNums = 1;
 
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -183,24 +186,34 @@ while (!glfwWindowShouldClose(window))
 	processInput(window);
 	dw->ClearBuffer(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 
-	sp.Position = camera->Position;
-	sp.Direction = camera->Front;
-
-	ModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(0.01,0.01,0.01));
-	UpdateNormalMatrix();
 	ViewMatrix = camera->ViewMatrix();
 	ProjectMatrix = camera->PerspectiveMatrix();
 	dw->UpdateViewPlanes();
+	sp.Position = camera->Position;
+	sp.Direction = camera->Front;
 
-	dw->DrawModel(model);
+
+
 	ModelMatrix = glm::mat4(1.0f);
+	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(1, 0, 0));
+//	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(100, 100, 100));
 	UpdateNormalMatrix();
-	//ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2, 0, 0));
-	dw->DrawObject(obj);
+	dw->DrawModel(wBox);
 
+	ModelMatrix = glm::mat4(1.0f);
+	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(-1, 0, 0));
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
+	UpdateNormalMatrix();
+	dw->DrawModel(model);
+
+
+	//ModelMatrix = glm::mat4(1.0f);
+	//UpdateNormalMatrix();
+	//ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2, 0, 0));
+
+	//dw->DrawObject(ground);
 	
 	//dw->DrawObject(Lamp);
-
 	dw->Show();
 	fps++;
 

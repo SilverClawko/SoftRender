@@ -30,9 +30,21 @@ class Camera;
 class Draw;
 class Material;
 
+class DirectionLight;
+class SpotLight;
+class PointLight;
+
+DirectionLight * dirLights;
+int dirLtNums = 0;
+SpotLight * spLights;
+int spLtNums = 0;
+PointLight * ptLights;
+int ptLtNums = 0;
+
 
 Camera * camera;
 Draw * dw;
 Material * currentMat;
+
 
 #endif

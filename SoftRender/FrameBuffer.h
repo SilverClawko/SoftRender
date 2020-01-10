@@ -2,7 +2,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include "Vertex.h"
+#include "Math.h"
 #include <array>
 
 //Ö¡»º³å

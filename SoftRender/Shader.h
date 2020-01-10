@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include "Texture.h"
+#include "Vertex.h"
 
 class Shader {
 public:
@@ -13,12 +14,13 @@ public:
 		V2F o;
 		o.worldPos = ModelMatrix * a2v.position;
 		// PVM*v
-		o.windowPos = ProjectMatrix * ViewMatrix * o.worldPos;
+		o.windowPos = ViewMatrix * o.worldPos;
+		o.windowPos = ProjectMatrix * o.windowPos;
 
 		o.Z = 1 / o.windowPos.w;
 		o.worldPos *= o.Z;
 		o.color = a2v.color * o.Z;
-		o.normal = NormalMatrix * a2v.normal * o.Z;
+		o.normal = glm::normalize(NormalMatrix * a2v.normal);
 		o.texcoord = a2v.texcoord * o.Z;
 		return o;
 	}

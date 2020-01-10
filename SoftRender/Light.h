@@ -44,22 +44,6 @@ public:
 		Direction = dir;
 		Intensity = i;
 	}
-	//向量都要是单位向量
-	//ViewDir是片段指向摄像机的方向
-	glm::vec3 CalcDirLight(
-		const glm::vec3 &worldNormal,
-		const glm::vec3 &worldViewDir,
-		const glm::vec3 &albedo
-	) {
-		float diff = max(glm::dot(worldNormal, -Direction), 0);
-
-		glm::vec3 halfDir = glm::normalize(worldViewDir - Direction);
-		float spec = pow(max(glm::dot(halfDir, worldNormal), 0), currentMat->Gloss);
-
-		glm::vec3 diffuse = Color * diff * albedo;
-		glm::vec3 specular = Specular * spec;
-		return  (diffuse + specular)*Intensity;
-	}
 };
 //点光源 方向不需要
 class PointLight : public Light {
@@ -85,34 +69,6 @@ public:
 		Direction = glm::vec3(0, 0, 0);
 		Intensity = i;
 	}
-
-	glm::vec3 CalcPointLight(
-		const glm::vec3 &worldPos,
-		const glm::vec3 &worldNormal,
-		const glm::vec3 &worldViewDir,
-		const glm::vec3 &albedo
-	) {
-		float distance = glm::distance(worldPos, Position);
-		float attenuation = 1.0 / (Constant + Linear * distance +
-			Quadratic * (distance * distance));
-
-
-		glm::vec3 lightDir = glm::normalize(worldPos - Position);
-		float diff = max(glm::dot(worldNormal, -lightDir), 0);
-
-		glm::vec3 halfDir = glm::normalize(worldViewDir - lightDir);
-		float spec = pow(max(glm::dot(halfDir, worldNormal), 0), currentMat->Gloss);
-
-		glm::vec3 diffuse = Color * diff * albedo;
-		glm::vec3 specular = Specular * spec;
-
-		diffuse *= attenuation;
-		specular *= attenuation;
-
-		return  (diffuse + specular)*Intensity;
-	}
-
-
 };
 //探照灯
 class SpotLight : public PointLight {
@@ -142,35 +98,6 @@ public:
 		Constant = c;
 		Linear = l;
 		Quadratic = q;
-	}
-
-	glm::vec3 CalcSpotLight(
-		const glm::vec3 &worldPos,
-		const glm::vec3 &worldNormal,
-		const glm::vec3 &worldViewDir,
-		const glm::vec3 &albedo
-	) {
-
-		glm::vec3 lightDir = glm::normalize(worldPos - Position);
-		float theta = glm::dot(lightDir, glm::normalize(Direction));
-		float weight = saturate((theta - outterCutOff) / (innerCutOff - outterCutOff));
-		float intensity = Lerp(0, 1, weight);
-
-		float distance = glm::distance(worldPos, Position);
-		float attenuation = 1.0 / (Constant + Linear * distance +
-			Quadratic * (distance * distance));
-		float diff = max(glm::dot(worldNormal, -lightDir), 0);
-
-		glm::vec3 halfDir = glm::normalize(worldViewDir - lightDir);
-		float spec = pow(max(glm::dot(halfDir, worldNormal), 0), currentMat->Gloss);
-
-		glm::vec3 diffuse = Color * diff * albedo;
-		glm::vec3 specular = Specular * spec;
-
-		diffuse *= (attenuation * intensity);
-		specular *= (attenuation * intensity);
-
-		return  (diffuse + specular)*Intensity;
 	}
 };
 
