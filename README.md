@@ -1,13 +1,16 @@
 # SoftRender
 
+一个简单的软件渲染器，渲染生成颜色缓冲数组之后使用glDrawPixels绘制到屏幕上
+
 # 2020.1.14更新
 重构了裁剪和剔除部分，将裁剪过程放到了透视除法之前，现在彻底运行完美了
+
 添加了立方体贴图功能，添加了PBR渲染器和材质
 
 ![text](https://github.com/SilverClawko/SoftRender/blob/master/ss5.png)
 ![text](https://github.com/SilverClawko/SoftRender/blob/master/ss6.png)
 
-一个简单的软件渲染器，渲染生成颜色缓冲数组之后使用glDrawPixels绘制到屏幕上
+# 2019 版本
 
 实现功能：obj模型加载与渲染，纹理加载与渲染，Blinn-Phong光照模型，点光源/平行光/聚光灯的光照计算，在世界空间进行视锥剔除，对超出视口的三角形进行裁剪
 
