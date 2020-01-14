@@ -15,6 +15,7 @@
 #include <sstream>
 #include <string>
 #include <cstdlib>
+#include <cmath>
 #include <vector>
 
 glm::mat4 ModelMatrix;
@@ -24,6 +25,7 @@ glm::mat4 ViewPortMatrix;
 //∑®œﬂ±‰ªªæÿ’Û
 glm::mat3 NormalMatrix;
 
+const float PI = 3.14159265359;
 const glm::vec3 Ambient = glm::vec3(0.5,0.5,0.5);
 
 class Camera;

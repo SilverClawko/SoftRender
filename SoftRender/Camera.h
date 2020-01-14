@@ -3,7 +3,7 @@
 #define CAMERA_H
 
 #include "Math.h"
-
+#include "Clip.h"
 
 class Camera
 {
@@ -17,6 +17,9 @@ public:
 	float Fov;
 	float Aspect;
 
+	float Near;
+	float Far;
+
 	float Pitch;
 	float Yaw;
 
@@ -24,12 +27,14 @@ public:
 	Camera(
 		glm::vec3 position = glm::vec3(0.0f, 0.0f, 1.0f),
 		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-		glm::vec3 lookat = glm::vec3(0.0f,0.0f,0.0f),
+		glm::vec3 lookat = glm::vec3(0.0f, 0.0f, 0.0f),
 		float fov = 60.0f,
 		int w = 800,
-		int h = 600
+		int h = 600,
+		float n = 0.3f,
+		float f = 100
 	):
-		Position(position), WorldUp(up),Fov(glm::radians(fov)),Aspect((float)w/h),Pitch(0),Yaw(0)
+		Position(position), WorldUp(up),Fov(glm::radians(fov)),Aspect((float)w/h),Pitch(0),Yaw(0),Near(n),Far(f)
 	{
 		Front = glm::normalize(lookat - Position);
 		Right = glm::normalize(glm::cross(Front, WorldUp));
@@ -56,7 +61,7 @@ public:
 	}
 	glm::mat4 PerspectiveMatrix() 
 	{
-		return GetPerspectiveMatrix(Fov,Aspect,0.3f,100);
+		return GetPerspectiveMatrix(Fov,Aspect,Near,Far);
 	}
 	void UpdateFov(float fov = 60.0f) {
 		Fov = glm::radians(fov);

@@ -86,20 +86,20 @@ public:
 	}
 
 	virtual glm::vec4 FragmentShader(const V2F &v) {
-		if (!currentMat->MainTex) {
-			return glm::vec4(1.0);
-		}
-		glm::vec4 albedo = currentMat->MainTex->Sample2D(v.texcoord) * currentMat->Color;
+		glm::vec3 albedo = Pow(currentMat->SampleAlbedo(v.texcoord) * currentMat->Color,2.2);
 		glm::vec3 worldNormal = glm::normalize(v.normal);
 		glm::vec3 worldViewDir = glm::normalize(camera->Position - glm::vec3(v.worldPos));
 
-		glm::vec3 result = Ambient * glm::vec3(albedo);
+		glm::vec3 result = Ambient * albedo;
 		for (int i = 0; i < dirLtNums; i++)
 			result += BlinnPhongShader::CalcDirLight(*(dirLights + i), worldNormal, worldViewDir, albedo);
 		for (int i = 0; i < ptLtNums; i++)
 			result += BlinnPhongShader::CalcPtLight(*(ptLights + i), glm::vec3(v.worldPos), worldNormal, worldViewDir, albedo);
 		for (int i = 0; i < spLtNums; i++)
 			result += BlinnPhongShader::CalcSpLight(*(spLights + i), glm::vec3(v.worldPos), worldNormal, worldViewDir, albedo); 
+
+		result = result / (result + glm::vec3(1.0));
+		result = pow(result, glm::vec3(1.0 / 2.2));
 		return glm::vec4(result, 1.0);
 	}
 };

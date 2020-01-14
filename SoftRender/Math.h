@@ -179,4 +179,12 @@ glm::vec3 reflect(const glm::vec3 &lightDir,const glm::vec3 &normal) {
 	return lightDir - 2 * glm::dot(normal, lightDir) * normal;
 }
 
+glm::vec3 Pow(const glm::vec3 &v,float y) {
+	glm::vec3 result;
+	result.x = pow(v.x, y);
+	result.y = pow(v.y, y);
+	result.z = pow(v.z, y);
+	return result;
+}
+
 #endif

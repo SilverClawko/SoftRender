@@ -99,6 +99,7 @@ public:
 		result.VBO[3].normal = normal;
 		result.VBO[3].color = glm::vec4(1.0f,0,1.0,1.0f);
 		result.VBO[3].texcoord = glm::vec2(0.0f, 0.0f);
+		
 		result.EBO[0] = 0;
 		result.EBO[1] = 2;
 		result.EBO[2] = 1;

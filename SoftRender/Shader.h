@@ -14,14 +14,11 @@ public:
 		V2F o;
 		o.worldPos = ModelMatrix * a2v.position;
 		// PVM*v
-		o.windowPos = ViewMatrix * o.worldPos;
-		o.windowPos = ProjectMatrix * o.windowPos;
+		o.windowPos = ProjectMatrix * ViewMatrix * o.worldPos;
 
-		o.Z = 1 / o.windowPos.w;
-		o.worldPos *= o.Z;
-		o.color = a2v.color * o.Z;
 		o.normal = glm::normalize(NormalMatrix * a2v.normal);
-		o.texcoord = a2v.texcoord * o.Z;
+		o.texcoord = a2v.texcoord;
+		o.color = a2v.color;
 		return o;
 	}
 	virtual glm::vec4 FragmentShader(const V2F &v) {

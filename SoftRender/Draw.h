@@ -6,16 +6,13 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Clip.h"
+#include "Cull.h"
 #include "PBR.h"
-
+#include "Skybox.h"
 
 enum RenderMode {
 	Line,
 	Fill
-};
-enum Face {
-	Back,
-	Front
 };
 
 //渲染管线
@@ -31,6 +28,8 @@ private:
 	std::vector<glm::vec4> ViewPlanes;
 
 	bool faceCull;
+	bool depthWrite;
+	bool viewCull;
 	Face cullMod;
 	RenderMode renderMod;
 
@@ -41,6 +40,8 @@ public:
 		FrontBuffer(nullptr),
 		FBO1(FrameBuffer(w,h)),
 		faceCull(false),
+		depthWrite(true),
+		viewCull(true),
 		cullMod(Back),
 		renderMod(Fill)
 	{
@@ -67,6 +68,18 @@ public:
 		faceCull = true;
 		cullMod = f;
 	}
+	void EnableDepthWrite() {
+		depthWrite = true;
+	}
+	void DisableDepthWrite() {
+		depthWrite = false;
+	}
+	void EnableViewCull() {
+		viewCull = true;
+	}
+	void DisableViewCull() {
+		viewCull = false;
+	}
 	void DisableCull() {
 		faceCull = false;
 	}
@@ -86,59 +99,19 @@ public:
 #pragma region Pipeline
 	//透视除法
 	void PerspectiveDivision(V2F & v) {
+		if (v.windowPos.w == 0)
+			v.windowPos.w = 0.000001;
+		v.Z = 1 / v.windowPos.w;
 		v.windowPos /= v.windowPos.w;
 		v.windowPos.w = 1.0f;
 		v.windowPos.z = (v.windowPos.z + 1.0) * 0.5;
+
+		v.worldPos *= v.Z;
+		v.texcoord *= v.Z;
+		v.color *= v.Z;
+
 	}
 
-	//世界空间的视锥剔除
-	bool ViewCull(const glm::vec4 &v1, const glm::vec4 &v2, const glm::vec4 &v3) {
-
-		glm::vec3 minPoint, maxPoint;
-		minPoint.x = min(v1.x, min(v2.x, v3.x));
-		minPoint.y = min(v1.y, min(v2.y, v3.y));
-		minPoint.z = min(v1.z, min(v2.z, v3.z));
-		maxPoint.x = max(v1.x, max(v2.x, v3.x));
-		maxPoint.y = max(v1.y, max(v2.y, v3.y));
-		maxPoint.z = max(v1.z, max(v2.z, v3.z));
-		// Near 和 Far 剔除时只保留完全在内的
-		if (!Point2Plane(minPoint, ViewPlanes[4]) || !Point2Plane(maxPoint, ViewPlanes[4])) {
-			return false;
-		}
-		if (!Point2Plane(minPoint, ViewPlanes[5]) || !Point2Plane(maxPoint, ViewPlanes[5])) {
-			return false;
-		}
-
-		if (!Point2Plane(minPoint, ViewPlanes[0]) && !Point2Plane(maxPoint, ViewPlanes[0])) {
-			return false;
-		}
-		if (!Point2Plane(minPoint, ViewPlanes[1]) && !Point2Plane(maxPoint, ViewPlanes[1])) {
-			return false;
-		}
-		if (!Point2Plane(minPoint, ViewPlanes[2]) && !Point2Plane(maxPoint, ViewPlanes[2])) {
-			return false;
-		}
-		if (!Point2Plane(minPoint, ViewPlanes[3]) && !Point2Plane(maxPoint, ViewPlanes[3])) {
-			return false;
-		}
-
-		return true;
-	}
-
-	//面剔除，剔除正向面或者逆向面
-	bool FaceCull(Face face, const glm::vec4 &v1, const glm::vec4 &v2, const glm::vec4 &v3) {
-
-		glm::vec3 tmp1 = glm::vec3(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
-		glm::vec3 tmp2 = glm::vec3(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z);
-
-		//叉乘得到法向量
-		glm::vec3 normal = glm::normalize(glm::cross(tmp1, tmp2));
-		glm::vec3 view = glm::normalize(glm::vec3(v1.x - camera->Position.x, v1.y - camera->Position.y, v1.z - camera->Position.z));
-		if (cullMod == Back)
-			return glm::dot(normal, view) < 0;
-		else
-			return glm::dot(normal, view) > 0;
-	}
 
 	void DrawModel(Model &model) {
 		for (int i = 0; i < model.objects.size(); i++) {
@@ -161,33 +134,33 @@ public:
 			v1 = currentMat->shader->VertexShader(p1);
 			v2 = currentMat->shader->VertexShader(p2);
 			v3 = currentMat->shader->VertexShader(p3);
-
-			if (!ViewCull(v1.worldPos / v1.Z, v2.worldPos / v2.Z, v3.worldPos / v3.Z)) {
+			if (viewCull && !ClipSpaceCull(v1.windowPos , v2.windowPos, v3.windowPos)) {
 				continue;
 			}
+	
+			//裁剪
+			std::vector<V2F> clipingVertexs = SutherlandHodgeman(v1,v2,v3);
 
-			//做透视除法 变换到NDC
-			PerspectiveDivision(v1);
-			PerspectiveDivision(v2);
-			PerspectiveDivision(v3);
+			//透视除法
+			for (int i = 0; i < clipingVertexs.size(); i++) {
+				PerspectiveDivision(clipingVertexs[i]);
+			}
 
-			//裁剪生成多个三角形
-			std::vector<V2F> clipingVertexs = SutherlandHodgeman(v1, v2, v3);
-
+		
 			//画出最终的三角形
 			int n = clipingVertexs.size() - 3 + 1;
 			for (int i = 0; i < n; i++) {
 				V2F v1 = clipingVertexs[0];
 				V2F v2 = clipingVertexs[i + 1];
 				V2F v3 = clipingVertexs[i + 2];
+				//剔除背向面
+				if (faceCull && !FaceCull(cullMod, v1.windowPos, v2.windowPos, v3.windowPos)) {
+					continue;
+				}
+
 				v1.windowPos = ViewPortMatrix * v1.windowPos;
 				v2.windowPos = ViewPortMatrix * v2.windowPos;
 				v3.windowPos = ViewPortMatrix * v3.windowPos;
-
-				//剔除背向面
-				if (faceCull && !FaceCull(Back, v1.worldPos / v1.Z, v2.worldPos / v2.Z, v3.worldPos / v3.Z)) {
-					continue;
-				}
 
 				if (renderMod == Line) {
 					DrawLine(v1, v2);
@@ -302,16 +275,16 @@ public:
 
 			//深度测试
 			float depth = FrontBuffer->GetDepth(v.windowPos.x, v.windowPos.y);
-			if (v.windowPos.z < depth) {
+			if (v.windowPos.z <= depth) {
 
 				float z = v.Z;
 				v.worldPos /= z;
 				v.texcoord /= z;
 				v.color /= z;
-				v.normal /= z;
 
 				FrontBuffer->WritePoint(v.windowPos.x, v.windowPos.y, currentMat->shader->FragmentShader(v));
-				FrontBuffer->WriteDepth(v.windowPos.x, v.windowPos.y, v.windowPos.z);
+				if(depthWrite)
+					FrontBuffer->WriteDepth(v.windowPos.x, v.windowPos.y, v.windowPos.z);
 			}
 		}
 	}

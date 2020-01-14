@@ -7,49 +7,100 @@
 //漫反射颜色 镜面反射颜色 镜面反射强度
 //纹理一张
 class Material {
-public:
-	glm::vec4 Color;
-	glm::vec4 Specular;
-	int Gloss;   // 8 - 256
-	Texture * MainTex;
-	Shader * shader;
-
+private:
+	Texture * Albedo;
 	Texture *Metallic;
 	Texture *Normal;
 	Texture *Roughness;
-	Texture *Ao;
-	Texture *Height;
+	Texture *AO;
+
+public:
+	Shader * shader;
+	glm::vec3 Color;
+	glm::vec3 Specular;
+	int Gloss;   // 8 - 256
+
+	float metallic;
+	float roughness;
+	float ao;
+
 
 	Material() :
-		Color(glm::vec4(1.0, 1.0, 1.0,1.0)),
-		Specular(glm::vec4(1.0, 1.0, 1.0,1.0)),
+		Color(glm::vec3(1.0)),
+		Specular(glm::vec3(1.0)),
 		Gloss(32),
-		MainTex(nullptr),
+		Albedo(nullptr),
 		Metallic(nullptr),
 		Normal(nullptr),
 		Roughness(nullptr),
-		Ao(nullptr),
-		Height(nullptr)
+		AO(nullptr),
+		metallic(1.0),
+		roughness(0.1),
+		ao(1.0)
 	{}
-	Material(const glm::vec4 &color,const glm::vec4 & specular,const int & gloss):
+	Material(const glm::vec3 &color,const glm::vec3 & specular,const int & gloss):
 		Color(color),
 		Specular(specular),
 		Gloss(gloss),
-		MainTex(nullptr),
+		Albedo(nullptr),
 		Metallic(nullptr),
 		Normal(nullptr),
 		Roughness(nullptr),
-		Ao(nullptr),
-		Height(nullptr)
+		AO(nullptr),
+		metallic(1.0),
+		roughness(0.1),
+		ao(1.0)
 	{}
 
 	virtual ~Material() = default;
 
+	glm::vec3 SampleAlbedo(const glm::vec2 &texcoord) {
+		if (Albedo) {
+			return Albedo->Sample2D(texcoord);
+		}
+		else {
+			return Color;
+		}
+	}
+	glm::vec3 SampleNormal(const glm::vec2 &texcoord) {
+		if (Normal) {
+			return Normal->Sample2D(texcoord);
+		}
+		else {
+			return glm::vec3(0, 0, 1);
+		}
+	}
+	float SampleMetallic(const glm::vec2 &texcoord) {
+		if (Metallic) {
+			return Metallic->Sample2D(texcoord).r;
+		}
+		else {
+			return metallic;
+		}
+	}
+	float SampleRoughness(const glm::vec2 &texcoord) {
+		if (Roughness) {
+			return Roughness->Sample2D(texcoord).r;
+		}
+		else {
+			return roughness;
+		}
+	}
+	float SampleAO(const glm::vec2 &texcoord) {
+		if (AO) {
+			return AO->Sample2D(texcoord).r;
+		}
+		else {
+			return ao;
+		}
+	}
+
+
 	void SetShader(Shader * s) {
 		shader = s;
 	}
-	void SetTexture(Texture * t) {
-		MainTex = t;
+	void SetAlbedo(Texture * a) {
+		Albedo = a;
 	}
 	void SetMetallicMap(Texture * m) {
 		Metallic = m;
@@ -60,11 +111,8 @@ public:
 	void SetRoughnessMap(Texture * r) {
 		Roughness = r;
 	}
-	void SetAoMap(Texture * ao) {
-		Ao = ao;
-	}
-	void SetHeightMap(Texture *h) {
-		Height = h;
+	void SetAOMap(Texture * ao) {
+		AO = ao;
 	}
 };
 

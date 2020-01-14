@@ -87,14 +87,14 @@ int main() {
 		return -1;
 	}
 
-	camera = new Camera(glm::vec3(0, 0, 5),
+	camera = new Camera(glm::vec3(0, 0, 3),
 		glm::vec3(0, 1, 0), glm::vec3(0, 0, 0),
 		60.0f,
-		SCR_WIDTH, SCR_HEIGHT);
+		SCR_WIDTH, SCR_HEIGHT,0.3f,100);
 
 	dw = new Draw(SCR_WIDTH, SCR_HEIGHT);
 	dw->EnableCull(Back);
-
+	dw->changeRenderMode();
 
 
 	ViewPortMatrix = GetViewPortMatrix(0,0,SCR_WIDTH,SCR_HEIGHT);
@@ -102,7 +102,7 @@ int main() {
 	BlinnPhongShader shader;
 
 
-
+	/*
 	Material bodyMat;
 	bodyMat.SetShader(&shader);
 	Texture bodyTexture("neptune\\Texf_body02.jpg");
@@ -130,26 +130,56 @@ int main() {
 	model.SetMaterial(1, faceMat);
 	model.SetMaterial(2, bodyMat);
 	model.SetMaterial(3, eyeMat);
+	*/
 
 	PBRShader pbr;
+	CubeMap irr("MonValley_G_DirtRoad\\output_iem.hdr");
+	pbr.SetCubeMap(&irr);
 	Model wBox("box\\Wooden_stuff.obj");
 	Material wBoxMat;
 	wBoxMat.SetShader(&pbr);
 	Texture wBoxTexture("box\\Wooden_box_01_BaseColor.png");
-	wBoxMat.SetTexture(&wBoxTexture);
+	wBoxMat.SetAlbedo(&wBoxTexture);
 	Texture wBoxNormal("box\\Wooden_box_01_Normal.png");
 	wBoxMat.SetNormalMap(&wBoxNormal);
-	Texture wBoxHeight("box\\Wooden_box_01_Height.png");
-	wBoxMat.SetHeightMap(&wBoxHeight);
+	Texture wBoxMetallic("box\\Wooden_box_01_Metallic.png");
+	wBoxMat.SetMetallicMap(&wBoxMetallic);
+	Texture wBoxRoughness("box\\Wooden_box_01_Roughness.png");
+	wBoxMat.SetRoughnessMap(&wBoxRoughness);
+	Texture wBoxAo("box\\Wooden_box_01_AO.png");
+	wBoxMat.SetAOMap(&wBoxAo);
 	wBox.SetMaterial(0, wBoxMat);
 
+	/*
+	Model gun("gun\\Cerberus_LP.obj");
+	Material gunMat;
+	gunMat.SetShader(&pbr);
+	Texture gunTexture("gun\\Cerberus_A.png");
+	gunMat.SetAlbedo(&gunTexture);
+	Texture gunNormal("gun\\Cerberus_N.png");
+	gunMat.SetNormalMap(&gunNormal);
+	Texture gunMetallic("gun\\Cerberus_M.png");
+	gunMat.SetMetallicMap(&gunMetallic);
+	Texture gunRoughness("gun\\Cerberus_R.png");
+	gunMat.SetRoughnessMap(&gunRoughness);
+	gun.SetMaterial(0, gunMat);
+	*/
 
-	Mesh box = CreateBox(glm::vec3(1, 0.0, -1), 0.5);
-	Material mat;
-	mat.SetShader(&shader);
-	Texture boxt("container.jpg");
-	mat.SetTexture(&boxt);
-	Object obj(box,mat);
+	SkyBoxShader sks;
+	CubeMap hdr("MonValley_G_DirtRoad\\output_skybox.hdr");
+	sks.SetCubeMap(&hdr);
+	Mesh box = CreateBox(glm::vec3(0.0),1);
+	Material hdrMat;
+	hdrMat.SetShader(&sks);
+	Object SkyBox(box,hdrMat);
+
+	//Mesh p = CreatePlane(glm::vec3(-1,0,-1),glm::vec3(-1,0,1),glm::vec3(1,0,1),glm::vec3(1,0,-1),glm::vec3(0,1,0));
+	Texture pt("container.jpg");
+	Material pm;
+	pm.SetShader(&shader);
+	pm.SetAlbedo(&pt);
+	Object plane(box,pm);
+
 
 	DirectionLight dir(glm::vec3(-1,-1,-1));
 	dirLights = &dir;
@@ -193,27 +223,33 @@ while (!glfwWindowShouldClose(window))
 	sp.Direction = camera->Front;
 
 
+	
+	//ModelMatrix = glm::mat4(1.0f);
+	//ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0, 0, 1));
+	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
+	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3, 3, 3));
+	//UpdateNormalMatrix();
+	
+	//dw->EnableDepthWrite();
+	//dw->EnableCull(Front);
+	//dw->DrawObject(plane);
+	//dw->DrawModel(gun);
 
-	ModelMatrix = glm::mat4(1.0f);
-	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(1, 0, 0));
-//	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(100, 100, 100));
-	UpdateNormalMatrix();
-	dw->DrawModel(wBox);
-
+	
 	ModelMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(-1, 0, 0));
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
 	UpdateNormalMatrix();
-	dw->DrawModel(model);
-
-
-	//ModelMatrix = glm::mat4(1.0f);
-	//UpdateNormalMatrix();
-	//ModelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2, 0, 0));
-
-	//dw->DrawObject(ground);
+	dw->EnableDepthWrite();
+	dw->EnableCull(Back);
+	dw->DrawModel(wBox);
 	
-	//dw->DrawObject(Lamp);
+	
+	ModelMatrix = glm::mat4(1.0f);
+	UpdateNormalMatrix();
+	dw->EnableCull(Front);
+	dw->DisableDepthWrite();
+	dw->DrawObject(SkyBox);
+	
 	dw->Show();
 	fps++;
 

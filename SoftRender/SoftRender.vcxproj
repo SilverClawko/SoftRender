@@ -129,6 +129,8 @@
     <ClInclude Include="BlinnPhongShader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clip.h" />
+    <ClInclude Include="Cubemap.h" />
+    <ClInclude Include="Cull.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Globel.h" />
@@ -140,6 +142,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="PBR.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Vertex.h" />

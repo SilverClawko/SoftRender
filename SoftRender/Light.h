@@ -36,14 +36,8 @@ public:
 		const glm::vec3 &dir = glm::normalize(glm::vec3(0, -1, 1)),
 		const glm::vec3 &color = glm::vec3(1, 1, 1),
 		const glm::vec3 &specular = glm::vec3(1, 1, 1),
-		const float & i = 0.1f)
-	{
-		Position = glm::vec3(0, 0, 0);
-		Color = color;
-		Specular = specular;
-		Direction = dir;
-		Intensity = i;
-	}
+		const float & i = 1.0f) : Light(glm::vec3(0, 0, 0),color,specular,dir,i)
+	{}
 };
 //点光源 方向不需要
 class PointLight : public Light {
@@ -61,14 +55,8 @@ public:
 		const float & c = 1.0f,
 		const float & l = 0.09f,
 		const float & q = 0.032f
-	) : Constant(c), Linear(l), Quadratic(q)
-	{
-		Position = pos;
-		Color = color;
-		Specular = specular;
-		Direction = glm::vec3(0, 0, 0);
-		Intensity = i;
-	}
+	) : Light(pos,color,specular,glm::vec3(0,0,0),i),Constant(c), Linear(l), Quadratic(q)
+	{}
 };
 //探照灯
 class SpotLight : public PointLight {
@@ -88,16 +76,9 @@ public:
 		const float & q = 0.032f,
 		const float & icut = glm::cos(glm::radians(12.5f)),
 		const float & ocut = glm::cos(glm::radians(17.5))
-	) : innerCutOff(icut), outterCutOff(ocut)
+	) : PointLight(pos,color,specular,i,c,l,q),innerCutOff(icut), outterCutOff(ocut)
 	{
-		Position = pos;
-		Color = color;
-		Specular = specular;
 		Direction = dir;
-		Intensity = i;
-		Constant = c;
-		Linear = l;
-		Quadratic = q;
 	}
 };
 
