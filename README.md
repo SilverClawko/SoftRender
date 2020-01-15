@@ -7,8 +7,7 @@
 
 添加了立方体贴图功能，添加了PBR渲染器和材质
 
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss5.png)
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss6.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/master/ss7.png)
 
 # 2019 版本
 
