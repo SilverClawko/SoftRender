@@ -5,14 +5,30 @@
 #include "CubeMap.h"
 
 class PBRShader : public Shader {
-public:
+
 
 	CubeMap * IrradianceMap;
-	PBRShader() : IrradianceMap(nullptr) {}
+	CubeMap * ReflectionMap1;
+	CubeMap * ReflectionMap2;
+	int RoughnessLOD;
+	Texture * BRDFLUT;
+
+public:
+
+	PBRShader() : IrradianceMap(nullptr), BRDFLUT(nullptr), ReflectionMap1(nullptr), ReflectionMap2(nullptr),RoughnessLOD(1){}
 	~PBRShader() = default;
 
-	void SetCubeMap(CubeMap * c) {
+	void SetIrradianceMap(CubeMap * c) {
 		IrradianceMap = c;
+	}
+	void SetReflectionMap1(CubeMap * r) {
+		ReflectionMap1 = r;
+	}
+	void SetReflectionMap2(CubeMap * r) {
+		ReflectionMap2 = r;
+	}
+	void SetBRDFLUT(Texture * t) {
+		BRDFLUT = t;
 	}
 
 	virtual V2F VertexShader(const Vertex &a2v) {
@@ -38,7 +54,7 @@ public:
 		float ao = currentMat->SampleAO(v.texcoord);
 		glm::vec3 N = glm::normalize(v.TBN * glm::normalize(currentMat->SampleNormal(v.texcoord) * 2.0f - 1.0f));
 		glm::vec3 V = glm::normalize(camera->Position - glm::vec3(v.worldPos));
-
+		glm::vec3 R = glm::normalize(reflect(-V,N));
 
 		glm::vec3 F0 = glm::vec3(0.04);
 		F0 = Lerp(F0, albedo, metallic);
@@ -53,7 +69,8 @@ public:
 		for (int i = 0; i < spLtNums; i++)
 			PBRShader::CalcSpLight(*(spLights+i),v.worldPos, V, N, albedo, metallic, roughness, F0, Lo);
 
-		glm::vec3 kS = fresnelSchlick(max(glm::dot(N,V),0.0),F0);
+		glm::vec3 F = fresnelSchlick(max(glm::dot(N,V),0.0),F0);
+		glm::vec3 kS = F;
 		glm::vec3 kD = 1.0f - kS;
 		kD *= 1.0 - metallic;
 		glm::vec3 irradiance(1.0);
@@ -61,7 +78,19 @@ public:
 			irradiance = IrradianceMap->Sample3D(N);
 
 		glm::vec3 diffuse = irradiance * albedo;
-		glm::vec3 ambient = (kD * diffuse) * ao;
+		
+		glm::vec3 prefilteredColor(1.0f);
+		if (ReflectionMap1 && roughness < 0.5) {
+			prefilteredColor = ReflectionMap1->Sample3D(R);
+		}
+		if (ReflectionMap2 && roughness > 0.5) {
+			prefilteredColor = ReflectionMap2->Sample3D(R);
+		}
+		glm::vec2 envBRDF = BRDFLUT->Sample2D(glm::vec2(max(glm::dot(N,V),0.0),roughness));
+		glm::vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+
+
+		glm::vec3 ambient = (kD * diffuse + specular) * ao;
 		glm::vec3 color = ambient + Lo;
 
 		color = color / (color + glm::vec3(1.0));

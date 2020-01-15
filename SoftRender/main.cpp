@@ -131,10 +131,21 @@ int main() {
 	model.SetMaterial(2, bodyMat);
 	model.SetMaterial(3, eyeMat);
 	*/
+	SkyBoxShader sks;
+	CubeMap hdr("MonValley_G_DirtRoad\\output_skybox.hdr");
+	sks.SetCubeMap(&hdr);
+	Mesh box = CreateBox(glm::vec3(0.0), 1);
+	Material hdrMat;
+	hdrMat.SetShader(&sks);
+	Object SkyBox(box, hdrMat);
 
 	PBRShader pbr;
 	CubeMap irr("MonValley_G_DirtRoad\\output_iem.hdr");
-	pbr.SetCubeMap(&irr);
+	pbr.SetIrradianceMap(&irr);
+	pbr.SetReflectionMap1(&hdr);
+	pbr.SetReflectionMap2(&irr);
+	Texture brdf("ibl_brdf_lut.png");
+	pbr.SetBRDFLUT(&brdf);
 	Model wBox("box\\Wooden_stuff.obj");
 	Material wBoxMat;
 	wBoxMat.SetShader(&pbr);
@@ -165,27 +176,22 @@ int main() {
 	gun.SetMaterial(0, gunMat);
 	
 
-	SkyBoxShader sks;
-	CubeMap hdr("MonValley_G_DirtRoad\\output_skybox.hdr");
-	sks.SetCubeMap(&hdr);
-	Mesh box = CreateBox(glm::vec3(0.0),1);
-	Material hdrMat;
-	hdrMat.SetShader(&sks);
-	Object SkyBox(box,hdrMat);
+
 
 	//Mesh p = CreatePlane(glm::vec3(-1,0,-1),glm::vec3(-1,0,1),glm::vec3(1,0,1),glm::vec3(1,0,-1),glm::vec3(0,1,0));
-	Texture pt("container.jpg");
-	Material pm;
-	pm.SetShader(&shader);
-	pm.SetAlbedo(&pt);
-	Object plane(box,pm);
+	//Texture pt("container.jpg");
+	//Material pm;
+	//pm.SetShader(&shader);
+	//pm.SetAlbedo(&pt);
+	//Object plane(box,pm);
 
 
 	DirectionLight dir(glm::vec3(0,0,-1),glm::vec3(1,1,1),glm::vec3(1,1,1),1.0);
 	dirLights = &dir;
 	dirLtNums = 1;
-	//PointLight pt(glm::vec3(1,1,1));
-	//shader.SetPointLight(&pt);
+	PointLight pt(glm::vec3(1,1,1));
+	ptLights = &pt;
+	ptLtNums = 1;
 	SpotLight sp(camera->Position,camera->Front);
 	spLights = &sp;
 	spLtNums = 1;
