@@ -30,10 +30,10 @@ public:
 
 	virtual glm::vec4 FragmentShader(const V2F& v) {
 		glm::vec3 uv = glm::normalize(v.worldPos); // make sure to normalize localPos
-		glm::vec3 color = Pow(cubeMap->Sample3D(uv),2.2);
+		glm::vec3 color = Pow(cubeMap->Sample3D(uv),0.45);
 
-		color = color / (color + glm::vec3(1.0));
-		color = pow(color, glm::vec3(1.0 / 2.2));
+		//color = color / (color + glm::vec3(1.0));
+		//color = pow(color, glm::vec3(1.0 / 2.2));
 		return glm::vec4(color, 1.0);
 	}
 

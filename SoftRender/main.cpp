@@ -150,7 +150,7 @@ int main() {
 	wBoxMat.SetAOMap(&wBoxAo);
 	wBox.SetMaterial(0, wBoxMat);
 
-	/*
+	
 	Model gun("gun\\Cerberus_LP.obj");
 	Material gunMat;
 	gunMat.SetShader(&pbr);
@@ -163,7 +163,7 @@ int main() {
 	Texture gunRoughness("gun\\Cerberus_R.png");
 	gunMat.SetRoughnessMap(&gunRoughness);
 	gun.SetMaterial(0, gunMat);
-	*/
+	
 
 	SkyBoxShader sks;
 	CubeMap hdr("MonValley_G_DirtRoad\\output_skybox.hdr");
@@ -181,7 +181,7 @@ int main() {
 	Object plane(box,pm);
 
 
-	DirectionLight dir(glm::vec3(-1,-1,-1));
+	DirectionLight dir(glm::vec3(0,0,-1),glm::vec3(1,1,1),glm::vec3(1,1,1),1.0);
 	dirLights = &dir;
 	dirLtNums = 1;
 	//PointLight pt(glm::vec3(1,1,1));
@@ -224,16 +224,15 @@ while (!glfwWindowShouldClose(window))
 
 
 	
-	//ModelMatrix = glm::mat4(1.0f);
-	//ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0, 0, 1));
-	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
+	ModelMatrix = glm::mat4(1.0f);
+	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0, 0, 1));
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
 	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3, 3, 3));
-	//UpdateNormalMatrix();
-	
-	//dw->EnableDepthWrite();
-	//dw->EnableCull(Front);
+	UpdateNormalMatrix();
+	dw->EnableDepthWrite();
+	dw->EnableCull(Back);
 	//dw->DrawObject(plane);
-	//dw->DrawModel(gun);
+	dw->DrawModel(gun);
 
 	
 	ModelMatrix = glm::mat4(1.0f);

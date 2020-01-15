@@ -3,27 +3,27 @@
 #include "Globel.h"
 #include "Vertex.h"
 
-//前后 左上右下 
-// Ax + By + C < 0 就在内侧
-const std::vector<glm::vec4> ViewLines = {
 
-	//Near z+w > 0
+const std::vector<glm::vec4> ViewLines = {
+	//Near
 	glm::vec4(0,0,1,1),
-	//left x+w > 0 
+	//far
+	//glm::vec4(0,0,-1,1),
+	//left
 	glm::vec4(1,0,0,1),
-	//top -y+w > 0
+	//top
 	glm::vec4(0,1,0,1),
-	//right -x+w < 0
+	//right
 	glm::vec4(-1,0,0,1),
-	//bottom -y+w > 0
+	//bottom 
 	glm::vec4(0,-1,0,1)
 };
-float Near = 0.3f;
+
 
 
 bool Inside(const glm::vec4 &line,const glm::vec4 &p) {
-	float sb =line.x * p.x  + line.y * p.y  + line.z * p.z + line.w * p.w;
-	return sb > 0;
+
+	return line.x * p.x + line.y * p.y + line.z * p.z + line.w * p.w >= 0;
 }
 
 bool AllVertexsInside(const std::vector<V2F> v) {
@@ -40,8 +40,8 @@ bool AllVertexsInside(const std::vector<V2F> v) {
 
 //交点，通过端点插值
 V2F Intersect(const V2F &v1,const V2F &v2,const glm::vec4 &line) {
-	float da = v1.windowPos.x * line.x + v1.windowPos.y * line.y + v1.windowPos.z *line.z + line.w * v1.windowPos.w;
-	float db = v2.windowPos.x * line.x + v2.windowPos.y * line.y + v2.windowPos.z *line.z + line.w * v2.windowPos.w;
+	float da = v1.windowPos.x * line.x + v1.windowPos.y * line.y + v1.windowPos.z *line.z + v1.windowPos.w * line.w;
+	float db = v2.windowPos.x * line.x + v2.windowPos.y * line.y + v2.windowPos.z *line.z + v2.windowPos.w * line.w;
 
 	float weight = da / (da-db);
 	return V2F::lerp(v1, v2, weight);
@@ -49,8 +49,6 @@ V2F Intersect(const V2F &v1,const V2F &v2,const glm::vec4 &line) {
 
 
 //输入 三个顶点 输出 裁剪后的顶点组
-//注意 顶点的时针顺序要跟裁剪边的遍历顺序一致
-
 std::vector<V2F> SutherlandHodgeman(const V2F &v1, const V2F &v2, const V2F &v3) {
 	std::vector<V2F> output = {v1,v2,v3};
 	if (AllVertexsInside(output)) {

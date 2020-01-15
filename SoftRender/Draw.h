@@ -99,8 +99,7 @@ public:
 #pragma region Pipeline
 	//透视除法
 	void PerspectiveDivision(V2F & v) {
-		if (v.windowPos.w == 0)
-			v.windowPos.w = 0.000001;
+
 		v.Z = 1 / v.windowPos.w;
 		v.windowPos /= v.windowPos.w;
 		v.windowPos.w = 1.0f;
@@ -109,7 +108,6 @@ public:
 		v.worldPos *= v.Z;
 		v.texcoord *= v.Z;
 		v.color *= v.Z;
-
 	}
 
 
@@ -147,7 +145,7 @@ public:
 			}
 
 		
-			//画出最终的三角形
+				//画出最终的三角形
 			int n = clipingVertexs.size() - 3 + 1;
 			for (int i = 0; i < n; i++) {
 				V2F v1 = clipingVertexs[0];

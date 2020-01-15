@@ -47,6 +47,9 @@ public:
 		for (int i = 0; i < dirLtNums; i++)
 			PBRShader::CalcDirLight(*(dirLights + i), V, N, albedo, metallic, roughness, F0, Lo);
 
+		for (int i = 0; i < ptLtNums; i++)
+			PBRShader::CalcPtLight(*(ptLights + i), v.worldPos, V, N, albedo, metallic, roughness, F0, Lo);
+
 		for (int i = 0; i < spLtNums; i++)
 			PBRShader::CalcSpLight(*(spLights+i),v.worldPos, V, N, albedo, metallic, roughness, F0, Lo);
 
@@ -98,6 +101,46 @@ public:
 		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 	}
 
+	static void CalcPtLight(
+		const PointLight &ptLight,
+		const glm::vec3 &pos,
+		const glm::vec3 &V,
+		const glm::vec3 &N,
+		const glm::vec3 &albedo,
+		const float metallic,
+		const float roughness,
+		const glm::vec3 &F0,
+		glm::vec3 &Lo
+	) {
+		glm::vec3 L = glm::normalize(pos - ptLight.Position);
+		float theta = glm::dot(L, glm::normalize(ptLight.Direction));
+
+		float distance = glm::distance(pos, ptLight.Position);
+		float attenuation = 1.0 / (distance * distance);
+		glm::vec3 radiance = ptLight.Color * attenuation * ptLight.Intensity;
+
+		L = -L;
+		glm::vec3 H = glm::normalize(V + L);
+
+		//cook-torrance BRDF
+		float NDF = DistributionGGX(N, H, roughness);
+		float G = GeometrySmith(N, V, L, roughness);
+		glm::vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+
+		glm::vec3 kS = F;
+		glm::vec3 kD = glm::vec3(1.0) - kS;
+		kD *= 1.0 - metallic;
+
+		glm::vec3 nominator = NDF * G * F;
+		float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+		glm::vec3 specular = nominator / denominator;
+
+		float NdotL = max(dot(N, L), 0.0);
+		Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+	}
+
+
+
 	static void CalcSpLight(
 		const SpotLight &spLight,
 		const glm::vec3 &pos,
@@ -115,8 +158,7 @@ public:
 		float intensity = Lerp(0, 1, weight);
 
 		float distance = glm::distance(pos, spLight.Position);
-		float attenuation = 1.0 / (spLight.Constant + spLight.Linear * distance +
-			spLight.Quadratic * (distance * distance));
+		float attenuation = 1.0 / (distance * distance);
 		glm::vec3 radiance = spLight.Color * attenuation * intensity * spLight.Intensity;
 
 		L = -L;
