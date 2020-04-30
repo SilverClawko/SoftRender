@@ -7,7 +7,9 @@
 
 添加了立方体贴图功能，添加了PBR渲染器和材质
 
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss7.png)
+使用到的枪模素材下载：http://artisaverb.info/PBT.html
+
+![text](https://github.com/SilverClawko/SoftRender/blob/master/SoftRender/ss9.png)
 
 # 2019 版本
 
