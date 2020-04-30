@@ -50,9 +50,9 @@ public:
 
 	virtual glm::vec4 Sample2D(const glm::vec2 &texcoord) {
 		//GL_REPEAT
-		float x = texcoord.x - (int)texcoord.x;
-		float y = texcoord.y - (int)texcoord.y;
-		return GetColor(x*width, y*height)/255.0f;
+		float x = texcoord.x - (float)floor(texcoord.x);
+		float y = texcoord.y - (float)floor(texcoord.y);
+		return GetColor(x*(width-1), y*(height-1))/255.0f;
 	}
 
 

@@ -215,6 +215,12 @@ int main() {
 	std::thread t(ShowFps,window);
 	t.detach();
 
+	Mesh plane = CreatePlane(glm::vec3(-0.5, 0.5, 0.5), glm::vec3(-0.5, -0.5, 0.5), glm::vec3(0.5, -0.5, 0.5), glm::vec3(0.5, 0.5, 0.5), glm::vec3(0, 0, 1));
+	Material sb;
+	Shader sb2;
+	sb.SetShader(&sb2);
+	Object test(plane,sb);
+
 
 
 while (!glfwWindowShouldClose(window))
@@ -228,8 +234,9 @@ while (!glfwWindowShouldClose(window))
 	sp.Position = camera->Position;
 	sp.Direction = camera->Front;
 
+	//dw->DrawObject(test);
 
-	
+	/*
 	ModelMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0, 0, 1));
 	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
@@ -240,21 +247,21 @@ while (!glfwWindowShouldClose(window))
 	//dw->DrawObject(plane);
 	dw->DrawModel(gun);
 
-	
+	*/
 	ModelMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(-1, 0, 0));
 	UpdateNormalMatrix();
 	dw->EnableDepthWrite();
 	dw->EnableCull(Back);
 	dw->DrawModel(wBox);
-	
+	/*
 	
 	ModelMatrix = glm::mat4(1.0f);
 	UpdateNormalMatrix();
 	dw->EnableCull(Front);
 	dw->DisableDepthWrite();
 	dw->DrawObject(SkyBox);
-	
+	*/
 	dw->Show();
 	fps++;
 
