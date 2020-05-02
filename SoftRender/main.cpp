@@ -106,22 +106,22 @@ int main() {
 	Material bodyMat;
 	bodyMat.SetShader(&shader);
 	Texture bodyTexture("neptune\\Texf_body02.jpg");
-	bodyMat.SetTexture(&bodyTexture);
+	bodyMat.SetAlbedo(&bodyTexture);
 
 	Material faceMat;
 	faceMat.SetShader(&shader);
 	Texture faceTexture("neptune\\Tex002f_body01.jpg");
-	faceMat.SetTexture(&faceTexture);
+	faceMat.SetAlbedo(&faceTexture);
 
 	Material mouseMat;
 	mouseMat.SetShader(&shader);
 	Texture mouseTexture("neptune\\Texf_mouse.jpg");
-	mouseMat.SetTexture(&mouseTexture);
+	mouseMat.SetAlbedo(&mouseTexture);
 
 	Material eyeMat;
 	eyeMat.SetShader(&shader);
 	Texture eyeTexture("neptune\\Tex001f_eye.jpg");
-	eyeMat.SetTexture(&eyeTexture);
+	eyeMat.SetAlbedo(&eyeTexture);
 
 
 	
@@ -131,6 +131,7 @@ int main() {
 	model.SetMaterial(2, bodyMat);
 	model.SetMaterial(3, eyeMat);
 	*/
+	/*
 	SkyBoxShader sks;
 	CubeMap hdr("MonValley_G_DirtRoad\\output_skybox.hdr");
 	sks.SetCubeMap(&hdr);
@@ -138,7 +139,7 @@ int main() {
 	Material hdrMat;
 	hdrMat.SetShader(&sks);
 	Object SkyBox(box, hdrMat);
-
+	
 	PBRShader pbr;
 	CubeMap irr("MonValley_G_DirtRoad\\output_iem.hdr");
 	pbr.SetIrradianceMap(&irr);
@@ -146,9 +147,10 @@ int main() {
 	pbr.SetReflectionMap2(&irr);
 	Texture brdf("ibl_brdf_lut.png");
 	pbr.SetBRDFLUT(&brdf);
+	*/
 	Model wBox("box\\Wooden_stuff.obj");
 	Material wBoxMat;
-	wBoxMat.SetShader(&pbr);
+	wBoxMat.SetShader(&shader);
 	Texture wBoxTexture("box\\Wooden_box_01_BaseColor.png");
 	wBoxMat.SetAlbedo(&wBoxTexture);
 	Texture wBoxNormal("box\\Wooden_box_01_Normal.png");
@@ -161,7 +163,7 @@ int main() {
 	wBoxMat.SetAOMap(&wBoxAo);
 	wBox.SetMaterial(0, wBoxMat);
 
-	
+	/*
 	Model gun("gun\\Cerberus_LP.obj");
 	Material gunMat;
 	gunMat.SetShader(&pbr);
@@ -174,7 +176,7 @@ int main() {
 	Texture gunRoughness("gun\\Cerberus_R.png");
 	gunMat.SetRoughnessMap(&gunRoughness);
 	gun.SetMaterial(0, gunMat);
-	
+	*/
 
 
 
@@ -239,7 +241,7 @@ while (!glfwWindowShouldClose(window))
 	/*
 	ModelMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0, 0, 1));
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
+
 	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3, 3, 3));
 	UpdateNormalMatrix();
 	dw->EnableDepthWrite();
@@ -250,6 +252,7 @@ while (!glfwWindowShouldClose(window))
 	*/
 	ModelMatrix = glm::mat4(1.0f);
 	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(-1, 0, 0));
+	//ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.01, 0.01, 0.01));
 	UpdateNormalMatrix();
 	dw->EnableDepthWrite();
 	dw->EnableCull(Back);

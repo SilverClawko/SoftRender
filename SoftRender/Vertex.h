@@ -67,7 +67,7 @@ public:
 		result.windowPos = Lerp(v1.windowPos, v2.windowPos, factor);
 		result.worldPos = Lerp(v1.worldPos, v2.worldPos, factor);
 		result.color = Lerp(v1.color, v2.color, factor);
-		result.normal = v1.normal;
+		result.normal = Lerp(v1.normal, v2.normal, factor);
 		result.texcoord = Lerp(v1.texcoord, v2.texcoord, factor);
 
 		result.TBN = v1.TBN;
