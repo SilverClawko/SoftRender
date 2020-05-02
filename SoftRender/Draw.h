@@ -106,6 +106,7 @@ public:
 		v.windowPos.z = (v.windowPos.z + 1.0) * 0.5;
 
 		v.worldPos *= v.Z;
+		v.normal *= v.Z;
 		v.texcoord *= v.Z;
 		v.color *= v.Z;
 	}
@@ -277,6 +278,7 @@ public:
 
 				float z = v.Z;
 				v.worldPos /= z;
+				v.normal /= z;
 				v.texcoord /= z;
 				v.color /= z;
 
