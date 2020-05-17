@@ -21,11 +21,12 @@ a Shader-based software render for learning
 * SutherlandHodgeman裁剪算法 / Homogeneous clipping based on SutherlandHodgeman algorithm
 * 可切换的正面背面剔除 / Switchable back face culling
 * 基础阴影 / Base Shadowmap
-* Blinn-Phong Shader
+* 标准光照模型 / Blinn-Phong Shader
 * PBR金属工作流 / PBR metalness workflow
-* obj模型文件加载 / load obj file
-* 自由设置模型参数 / customizable modelmatrix
-* 自由设置材质参数 / customizable material
+* obj模型文件加载 / Load obj file
+* 自由设置模型参数 / Customizable modelmatrix
+* 自由设置材质参数 / Customizable material
+* 切线空间的法线采样 / Tangent space normal map
 
 ![text](https://github.com/SilverClawko/SoftRender/blob/newVersion/ss2.png)
 
