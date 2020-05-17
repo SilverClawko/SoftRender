@@ -1,7 +1,10 @@
 # SoftRender
 
+基于Shader的软件渲染器
+
 a Shader-based software render for learning
 
+知乎文章上的版本请查看oldversion分支
 
 environment: Qt 5.12.3 + VS2017
 
