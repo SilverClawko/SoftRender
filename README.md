@@ -9,7 +9,7 @@
 
 使用到的枪模素材下载：http://artisaverb.info/PBT.html
 
-![text](https://github.com/SilverClawko/SoftRender/blob/master/SoftRender/ss9.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/oldversion/SoftRender/ss9.png)
 
 # 2019 版本
 
@@ -19,10 +19,10 @@
 
 配置环境：https://learnopengl-cn.github.io/01%20Getting%20started/02%20Creating%20a%20window/
 
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss1.png)
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss2.png)
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss3.png)
-![text](https://github.com/SilverClawko/SoftRender/blob/master/ss4.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/oldversion/ss1.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/oldversion/ss2.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/oldversion/ss3.png)
+![text](https://github.com/SilverClawko/SoftRender/blob/oldversion/ss4.png)
 
 文件说明：
 Globel.h 全局变量，MVP矩阵存放
