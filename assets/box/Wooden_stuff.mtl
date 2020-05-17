@@ -1,0 +1,16 @@
+# Blender MTL File: 'Wooden_stuff.blend'
+# Material Count: 1
+
+newmtl Wooden_box_01_mtl
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump D:\\YandexDisk\\Work\\Models_for_magazine\\Wooden_stuff\\Wooden_box_square_01\\Source\\Substance_textures\\Unity5\\Wooden_box_01_Normal.png
+map_Kd D:\\YandexDisk\\Work\\Models_for_magazine\\Wooden_stuff\\Wooden_box_square_01\\Source\\Substance_textures\\PBR\\Wooden_box_01_BaseColor.png
+map_Ns D:\\YandexDisk\\Work\\Models_for_magazine\\Wooden_stuff\\Wooden_box_square_01\\Source\\Substance_textures\\PBR\\Wooden_box_01_Roughness.png
+refl D:\\YandexDisk\\Work\\Models_for_magazine\\Wooden_stuff\\Wooden_box_square_01\\Source\\Substance_textures\\PBR\\Wooden_box_01_Metallic.png
