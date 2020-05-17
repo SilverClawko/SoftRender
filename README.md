@@ -1,6 +1,7 @@
 # SoftRender
 
 a Shader-based software render for learning
+
 environment: Qt 5.12.3 + VS2017
 
 
