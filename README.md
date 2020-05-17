@@ -26,6 +26,12 @@ environment: Qt 5.12.3 + VS2017
 * obj模型文件加载 / load obj file
 * 自由设置模型参数 / customizable modelmatrix
 * 自由设置材质参数 / customizable material
+
 ![text](https://github.com/SilverClawko/SoftRender/blob/newVersion/ss2.png)
+
 * 立方体贴图与天空盒 / Cubemap and Skybox
 * 基于图像的照明 / Image-based Lighting
+
+## 安装/Install
+
+Qt 5.12.3 + VS2017环境下打开sln文件直接编译
