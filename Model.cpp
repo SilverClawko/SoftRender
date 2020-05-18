@@ -226,8 +226,8 @@ void Model::BuildMesh(const std::vector<glm::vec3>& vertex, const std::vector<gl
 		else {
 			//v1.tangent = v2.tangent = v3.tangent = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 			v1.tangent = Vertex::CalcTangent(v1, v2, v3);
-			v2.tangent = Vertex::CalcTangent(v2, v3, v1);
-			v3.tangent = Vertex::CalcTangent(v3, v1, v2);
+			v2.tangent = v1.tangent;
+			v3.tangent = v1.tangent;
 		}
 		o->AddTriangle(v1, v2, v3);
 	}
