@@ -127,9 +127,6 @@ void Model::LoadObj(const std::string &filename)
 			// 1/1/1
 			for (int i = 0; i < 3; i++) {
 				iss >> vert[i].x >> bar >> vert[i].y >> bar >> vert[i].z;
-				//Vertex vertex(vertexs[vIndex - 1], glm::vec4(1, 1, 1, 1), texcoords[vtIndex - 1], normals[vnIndex - 1]);
-				//meshes[currentMeshNums]->VBO.push_back(vertex);
-				//meshes[currentMeshNums]->EBO.push_back(offset + i);
 			}
 			glm::mat3 face = glm::mat3(vert[0], vert[1], vert[2]);
 			faces.push_back(face);
@@ -139,59 +136,6 @@ void Model::LoadObj(const std::string &filename)
 				faces.push_back(face);
 			}
 			continue;
-			/*
-			//¼ÆËãÇÐÏß
-			glm::vec3 pos1 = meshes[currentMeshNums]->VBO[offset].position;
-			glm::vec3 pos2 = meshes[currentMeshNums]->VBO[offset + 1].position;
-			glm::vec3 pos3 = meshes[currentMeshNums]->VBO[offset + 2].position;
-			glm::vec2 uv1 = meshes[currentMeshNums]->VBO[offset].texcoord;
-			glm::vec2 uv2 = meshes[currentMeshNums]->VBO[offset + 1].texcoord;
-			glm::vec2 uv3 = meshes[currentMeshNums]->VBO[offset + 2].texcoord;
-			glm::vec3 edge1 = pos2 - pos1;
-			glm::vec3 edge2 = pos3 - pos1;
-			glm::vec2 deltaUV1 = uv2 - uv1;
-			glm::vec2 deltaUV2 = uv3 - uv1;
-
-			float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-
-			glm::vec3 tangent;
-			tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-			tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-			tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-			tangent = glm::normalize(tangent);
-			meshes[currentMeshNums]->VBO[offset].tangent = tangent;
-			meshes[currentMeshNums]->VBO[offset + 1].tangent = tangent;
-			meshes[currentMeshNums]->VBO[offset + 2].tangent = tangent;
-
-			if (iss >> vIndex) {
-				iss >> bar >> vtIndex >> bar >> vnIndex;
-				Vertex vertex(vertexs[vIndex - 1], glm::vec4(1, 1, 1, 1), texcoords[vtIndex - 1], normals[vnIndex - 1]);
-				meshes[currentMeshNums]->VBO.push_back(vertex);
-				meshes[currentMeshNums]->EBO.push_back(offset);
-				meshes[currentMeshNums]->EBO.push_back(offset + 2);
-				meshes[currentMeshNums]->EBO.push_back(offset + 3);
-				pos1 = meshes[currentMeshNums]->VBO[offset].position;
-				pos2 = meshes[currentMeshNums]->VBO[offset + 2].position;
-				pos3 = meshes[currentMeshNums]->VBO[offset + 3].position;
-				uv1 = meshes[currentMeshNums]->VBO[offset].texcoord;
-				uv2 = meshes[currentMeshNums]->VBO[offset + 2].texcoord;
-				uv3 = meshes[currentMeshNums]->VBO[offset + 3].texcoord;
-				edge1 = pos2 - pos1;
-				edge2 = pos3 - pos1;
-				deltaUV1 = uv2 - uv1;
-				deltaUV2 = uv3 - uv1;
-
-				f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-
-				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-				tangent = glm::normalize(tangent);
-				meshes[currentMeshNums]->VBO[offset].tangent = tangent;
-				meshes[currentMeshNums]->VBO[offset + 2].tangent = tangent;
-				meshes[currentMeshNums]->VBO[offset + 3].tangent = tangent;
-			}
-			*/
 		}
 		if (!line.compare(0, 14,"# ext.tangent ")) {
 			line = line.substr(14);
@@ -280,28 +224,10 @@ void Model::BuildMesh(const std::vector<glm::vec3>& vertex, const std::vector<gl
 			v3.tangent = tangent[face[i][2].z - 1];
 		}
 		else {
-			v1.tangent = v2.tangent = v3.tangent = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-			/*
-			glm::vec3 pos1 = v1.position;
-			glm::vec3 pos2 = v2.position;
-			glm::vec3 pos3 = v3.position;
-			glm::vec2 uv1 = v1.texcoord;
-			glm::vec2 uv2 = v2.texcoord;
-			glm::vec2 uv3 = v3.texcoord;
-			glm::vec3 edge1 = pos2 - pos1;
-			glm::vec3 edge2 = pos3 - pos1;
-			glm::vec2 deltaUV1 = uv2 - uv1;
-			glm::vec2 deltaUV2 = uv3 - uv1;
-			deltaUV1 = uv2 - uv1;
-			deltaUV2 = uv3 - uv1;
-			float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
-			glm::vec3 t;
-			t.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-			t.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-			t.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-			t = glm::normalize(t);
-			v1.tangent = v3.tangent = v2.tangent = glm::vec4(t, 1.0f);
-			*/
+			//v1.tangent = v2.tangent = v3.tangent = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			v1.tangent = Vertex::CalcTangent(v1, v2, v3);
+			v2.tangent = Vertex::CalcTangent(v2, v3, v1);
+			v3.tangent = Vertex::CalcTangent(v3, v1, v2);
 		}
 		o->AddTriangle(v1, v2, v3);
 	}

@@ -28,6 +28,8 @@ public:
 		const glm::vec3 & _normal = glm::vec3(0, 1, 0),
 		const glm::vec4 & _tangent = glm::vec4(0, 0, 1, 1)
 	);
+
+	static glm::vec4 CalcTangent(const Vertex &v1 , const Vertex &v2 , const Vertex &v3);
 };
 
 class VertexOut {
