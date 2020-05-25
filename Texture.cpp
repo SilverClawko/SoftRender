@@ -35,12 +35,15 @@ Texture2D::~Texture2D()
 
 glm::vec4 Texture2D::Sample2D(const glm::vec2 & texcoord)
 {
-	//return glm::vec4(texcoord.x, texcoord.y, 0.0f, 1.0f);
-	float u = (texcoord.x - (float)floor(texcoord.x - EPSILON));
-	float v = (texcoord.y - (float)floor(texcoord.y - EPSILON));
-	//return glm::vec4(u, v, 0.0f, 1.0f);
-	//float u = 1.0f - texcoord.x;
-	//float v = 1.0f - texcoord.y;
+	//1.3 -> 0.3    
+	float u = texcoord.x;
+	float v = texcoord.y;
+	if (u > 1.0f || u < 0.0f) {
+		u = u - (float)floor(u);
+	}
+	if (v > 1.0f || v < 0.0f) {
+		v = v - (float)floor(v);
+	}
 	int x = (int)(u * (image->width - 1));
 	int y = (int)(v * (image->height - 1));
 	int pos = (y * image->width + x) * image->channel;

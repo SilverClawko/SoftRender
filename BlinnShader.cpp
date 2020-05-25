@@ -60,7 +60,7 @@ inline glm::vec4 BlinnShader::CalcDirLight(DirectionLight * dirLight, const glm:
 
 inline float BlinnShader::CalcShadow(const glm::vec4 & lightPos, float bias)
 {
-	if (uniform->dirLight->ShadowMap()) {
+	if (uniform->dirLight->ShadowMap() != nullptr) {
 		glm::vec3 projPos = lightPos;
 		projPos /= lightPos.w;
 		projPos = projPos * 0.5f + 0.5f;

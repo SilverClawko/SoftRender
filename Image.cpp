@@ -96,6 +96,7 @@ void Image::LoadImage(const std::string &filename)
 	if (strcmp(extension, "hdr") == 0) {
 		//stbi_set_flip_vertically_on_load(true);
 		fdata = stbi_loadf(filename.c_str(), &width, &height, &channel, 0);
+		//channel = 4;
 		//linear 2 srgb
 		format = HDR;
 		//Linear2Srgb();
@@ -103,6 +104,7 @@ void Image::LoadImage(const std::string &filename)
 	}
 	else {
 		data = stbi_load(filename.c_str(), &width, &height, &channel, 0);
+		//channel = 4;
 		format = LDR;
 	}
 	

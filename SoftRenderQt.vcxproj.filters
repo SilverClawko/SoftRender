@@ -115,9 +115,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderLoop.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
     <ClCompile Include="ModelTab.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
@@ -133,12 +130,12 @@
     <ClCompile Include="PBRShader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="RenderLoop.cpp">
+      <Filter>Source Files\Pipeline</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="RenderWidget.h">
-      <Filter>Header Files\UI</Filter>
-    </QtMoc>
-    <QtMoc Include="RenderLoop.h">
       <Filter>Header Files\UI</Filter>
     </QtMoc>
     <QtMoc Include="ModelTab.h">
@@ -149,6 +146,9 @@
     </QtMoc>
     <QtMoc Include="MaterialDialog.h">
       <Filter>Header Files\UI</Filter>
+    </QtMoc>
+    <QtMoc Include="RenderLoop.h">
+      <Filter>Header Files\Pipeline</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

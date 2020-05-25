@@ -111,6 +111,11 @@ void RenderLoop::MainLoop()
 				delete SBO;
 			}
 		}
+		else {
+			for (int i = 0; i < sys->dirLights.size(); i++) {
+				sys->dirLights[i]->SetShadowMap(nullptr);
+			}
+		}
 		sys->SetViewPortMatrix(sys->width, sys->height);
 		sys->writeColor = true;
 		sys->writeDepth = true;
