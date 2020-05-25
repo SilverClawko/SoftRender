@@ -56,7 +56,7 @@
     <Filter Include="Source Files\Material">
       <UniqueIdentifier>{30c44f0c-98e7-46f6-996d-7eeec0f250f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Material\Pipeline">
+    <Filter Include="Source Files\Pipeline">
       <UniqueIdentifier>{083a1ccb-2be6-4f90-aa78-05aa93470778}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -83,7 +83,7 @@
       <Filter>Source Files\Tool</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files\Material\Pipeline</Filter>
+      <Filter>Source Files\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Base</Filter>
@@ -104,7 +104,7 @@
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="StateMachine.cpp">
-      <Filter>Source Files\Material\Pipeline</Filter>
+      <Filter>Source Files\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Material</Filter>
@@ -131,7 +131,7 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="RenderLoop.cpp">
-      <Filter>Source Files\Material\Pipeline</Filter>
+      <Filter>Source Files\Pipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

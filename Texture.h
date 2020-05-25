@@ -9,6 +9,8 @@ class Texture2D {
 
 protected:
 	Image * image;
+	glm::vec2 texSize;
+	glm::vec2 unitTexel;
 
 public:
 

@@ -9,16 +9,26 @@ Texture2D::Texture2D() : image(nullptr)
 Texture2D::Texture2D(const std::string &filename) : image(nullptr)
 {
 	image = new Image(filename);
+	texSize.x = image->width;
+	texSize.y = image->height;
+	unitTexel = 1.0f / texSize;
+
 }
 
 Texture2D::Texture2D(Image * img) : image(nullptr)
 {
 	image = new Image(*img);
+	texSize.x = image->width;
+	texSize.y = image->height;
+	unitTexel = 1.0f / texSize;
 }
 
 Texture2D::Texture2D(const Texture2D & t) : image(nullptr)
 {
 	image = new Image(*t.image);
+	texSize.x = image->width;
+	texSize.y = image->height;
+	unitTexel = 1.0f / texSize;
 }
 
 Image * Texture2D::GetImage() const
@@ -35,9 +45,8 @@ Texture2D::~Texture2D()
 
 glm::vec4 Texture2D::Sample2D(const glm::vec2 & texcoord)
 {
-	//1.3 -> 0.3    
-	float u = texcoord.x;
-	float v = texcoord.y;
+	float u = texcoord.x;// -floor(texcoord.x);
+	float v = texcoord.y;// -floor(texcoord.y);
 	if (u > 1.0f || u < 0.0f) {
 		float uu = floor(u);
 		if (u > 1.0f)

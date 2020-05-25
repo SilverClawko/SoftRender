@@ -187,9 +187,14 @@ void Graphics::RasterizeTriangle(const VertexOut & v1, const VertexOut & v2, con
 	V3 = (V3 - V1) * OneDivideDelta;
 
 	float zx = I03 * Z[1] + I01 * Z[2];
-	VertexOut vx = I03 * V2 + I01 * V3;
+	//float zy = J03 * Z[1] + J01 * Z[2];
+
+	//VertexOut vx = I03 * V2 + I01 * V3;
+	//VertexOut vy = J03 * V2 + J01 * V3;
 	
 	int Cy1 = F01, Cy2 = F02, Cy3 = F03;
+	//float z0 = Z[0] + Cy3 * Z[1] + Cy1 * Z[2];// +0.5f * zx + 0.5f * zy;
+	//VertexOut v0 = V1 + Cy3 * V2 + Cy1 * V3;// +0.5f * vx + 0.5f * vy;
 
 	for (int y = startY; y < endY; y++)
 	{
@@ -197,16 +202,16 @@ void Graphics::RasterizeTriangle(const VertexOut & v1, const VertexOut & v2, con
 		int Cx1 = Cy1;
 		int Cx2 = Cy2;
 		int Cx3 = Cy3;
-		float depth = Z[0] + Z[1] * Cx3 + Z[2] * Cx1;
-		VertexOut vf = V1 + V2 * Cx3 + V3 * Cx1;
+		float depth = Z[0] + Cx3 * Z[1] + Cx1 * Z[2];
+		//VertexOut vf = V1 + V2 * Cx3 + V3 * Cx1 + 0.5f * vx;
 		for (int x = startX; x < endX; x++)
 		{
 			int mask = Cx1 | Cx2 | Cx3;
 			if (mask >= 0) {
 				if (depth <= renderTarget->GetDepth(x, y)) {
-					//glm::vec3 weights = glm::vec3(Cx2 * OneDivideDelta, Cx3 * OneDivideDelta, Cx1 * OneDivideDelta);
-					//VertexOut frag = lerp(v1, v2, v3, weights);
-					VertexOut frag = vf + (x - startX)*vx;
+					glm::vec3 weights = glm::vec3(Cx2 * OneDivideDelta, Cx3 * OneDivideDelta, Cx1 * OneDivideDelta);
+					VertexOut frag = lerp(v1, v2, v3, weights);
+					//VertexOut frag = v0 + (x - startX) * vx + (y - startY) * vy;
 					PerspectiveRestore(frag);
 					renderTarget->WriteColor(x, y, shader->FragmentShader(frag));		
 					//renderTarget->WriteColor(x, y, glm::vec4(depth,depth,depth,1.0f));
@@ -218,11 +223,13 @@ void Graphics::RasterizeTriangle(const VertexOut & v1, const VertexOut & v2, con
 			Cx2 += I02;
 			Cx3 += I03;
 			depth += zx;
+			//z0 += zx;
 		}
 		//Cy += J
 		Cy1 += J01;
 		Cy2 += J02;
 		Cy3 += J03;
+		//z0 += zy;
 	}
 }
 
