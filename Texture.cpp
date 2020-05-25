@@ -38,12 +38,11 @@ glm::vec4 Texture2D::Sample2D(const glm::vec2 & texcoord)
 	//1.3 -> 0.3    
 	float u = texcoord.x;
 	float v = texcoord.y;
-	if (u > 1.0f || u < 0.0f) {
-		u = u - (float)floor(u);
-	}
-	if (v > 1.0f || v < 0.0f) {
-		v = v - (float)floor(v);
-	}
+	float uu = floor(u);
+	float vv = floor(v);
+	u = uu == u ? 1.0f : u - uu;
+	v = vv == v ? 1.0f : v - vv;
+
 	int x = (int)(u * (image->width - 1));
 	int y = (int)(v * (image->height - 1));
 	int pos = (y * image->width + x) * image->channel;
