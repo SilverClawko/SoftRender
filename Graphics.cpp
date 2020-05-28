@@ -339,12 +339,3 @@ inline void Graphics::ViewPortMapping(VertexOut & v)
 {
 	v.windowPos = sys->viewPortMatrix * v.windowPos;
 }
-//重心坐标计算
-inline glm::vec3 Graphics::CalcWeights(const glm::vec2 & v12, const glm::vec2 & v13, const glm::vec2 & v1p)
-{
-	float factor = 1 / (v12.x * v13.y - v12.y * v13.x);
-	float s = (v13.y * v1p.x - v13.x * v1p.y) * factor;
-	float t = (v12.x * v1p.y - v12.y * v1p.x) * factor;
-	glm::vec3 weights = glm::vec3(1.0f - s - t, s, t);
-	return weights;
-}

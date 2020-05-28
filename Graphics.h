@@ -37,8 +37,6 @@ public:
 	void PerspectiveDivision(VertexOut &v);
 	void ViewPortMapping(VertexOut &v);
 
-	glm::vec3 CalcWeights(const glm::vec2 &v1, const glm::vec2 &v2, const glm::vec2 &v3);
-
 };
 
 

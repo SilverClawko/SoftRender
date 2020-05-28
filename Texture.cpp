@@ -45,24 +45,11 @@ Texture2D::~Texture2D()
 
 glm::vec4 Texture2D::Sample2D(const glm::vec2 & texcoord)
 {
-	float u = texcoord.x;// -floor(texcoord.x);
-	float v = texcoord.y;// -floor(texcoord.y);
-	if (u > 1.0f || u < 0.0f) {
-		float uu = floor(u);
-		if (u > 1.0f)
-			u = uu == u ? 1.0f : u - uu;
-		else
-			u = uu == u ? 0.0f : u - uu;
-	}
-	if (v > 1.0f || v < 0.0f) {
-		float vv = floor(v);
-		if (v > 1.0f)
-			v = vv == v ? 1.0f : v - vv;
-		else
-			v = vv == v ? 0.0f : v - vv;
-	}
-	int x = (int)(u * (image->width - 1));
-	int y = (int)(v * (image->height - 1));
+	int x = (int)(texcoord.x * image->width - 0.5f) % image->width;
+	int y = (int)(texcoord.y * image->height - 0.5f) % image->height;
+	x = x < 0 ? image->width + x : x;
+	y = y < 0 ? image->height + y : y;
+	
 	int pos = (y * image->width + x) * image->channel;
 	if (image->format == HDR) {
 		float * p = image->fdata;
